@@ -1,16 +1,16 @@
-import React, { useState, useEffect } from 'react';
-import { Settings, DollarSign, Clock, Bell, Palette, UtensilsCrossed, Plus, Edit2, Trash2, Check, X, Volume2, VolumeX, Power } from 'lucide-react';
-import settingsService from './settingsService';
+import React, { useState, useEffect } from 'react'
+import { Settings, DollarSign, Clock, Bell, Palette, UtensilsCrossed, Plus, Edit2, Trash2, Check, X, Volume2, VolumeX, Power } from 'lucide-react'
+import settingsService from './settingsService'
 
 const SettingsPanel = ({ onClose }) => {
-  const [activeTab, setActiveTab] = useState('general');
-  const [settings, setSettings] = useState(null);
-  const [menuItems, setMenuItems] = useState([]);
-  const [editingItem, setEditingItem] = useState(null);
-  const [saving, setSaving] = useState(false);
+  const [activeTab, setActiveTab] = useState('general')
+  const [settings, setSettings] = useState(null)
+  const [menuItems, setMenuItems] = useState([])
+  const [editingItem, setEditingItem] = useState(null)
+  const [saving, setSaving] = useState(false)
   
   // Gerenciamento de senhas
-  const [showPasswordSection, setShowPasswordSection] = useState(false);
+  const [showPasswordSection, setShowPasswordSection] = useState(false)
   const [passwords, setPasswords] = useState({
     adminUsername: 'admin',
     adminPassword: '',
@@ -18,34 +18,33 @@ const SettingsPanel = ({ onClose }) => {
     kitchenUsername: 'cozinha',
     kitchenPassword: '',
     kitchenPasswordConfirm: ''
-  });
+  })
 
   useEffect(() => {
     const initialize = async () => {
-      await loadSettings();
-      await loadMenu();
-      await loadPasswords();
-    };
-    initialize();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+      await loadSettings()
+      await loadMenu()
+      await loadPasswords()
+    }
+    initialize()
+  }, [])
 
   const loadSettings = async () => {
-    const data = await settingsService.getSettings();
-    setSettings(data);
-  };
+    const data = await settingsService.getSettings()
+    setSettings(data)
+  }
 
   const loadMenu = async () => {
-    const data = await settingsService.getMenu();
-    setMenuItems(data);
-  };
+    const data = await settingsService.getMenu()
+    setMenuItems(data)
+  }
 
   const handleInitializeDefaultMenu = async () => {
     if (!window.confirm('Isso irá adicionar os itens padrão ao menu. Continuar?')) {
-      return;
+      return
     }
 
-    setSaving(true);
+    setSaving(true)
     
     const defaultMenu = [
       {
@@ -120,129 +119,128 @@ const SettingsPanel = ({ onClose }) => {
         image: 'https://images.unsplash.com/photo-1600271886742-f049cd451bba?w=400&h=300&fit=crop',
         available: true
       }
-    ];
+    ]
 
     try {
       for (const item of defaultMenu) {
-        await settingsService.saveMenuItem(item);
+        await settingsService.saveMenuItem(item)
       }
       
-      await loadMenu();
-      alert('✅ Menu padrão inicializado com sucesso!\n\n8 itens foram adicionados ao cardápio.');
+      await loadMenu()
+      alert('✅ Menu padrão inicializado com sucesso!\n\n8 itens foram adicionados ao cardápio.')
     } catch (error) {
-      console.error('Erro ao inicializar menu:', error);
-      alert('❌ Erro ao inicializar menu. Verifique o console.');
+      console.error('Erro ao inicializar menu:', error)
+      alert('❌ Erro ao inicializar menu. Verifique o console.')
     } finally {
-      setSaving(false);
+      setSaving(false)
     }
-  };
+  }
 
   const loadPasswords = async () => {
-    const data = await settingsService.getPasswords();
+    const data = await settingsService.getPasswords()
     if (data) {
       setPasswords({
         ...passwords,
         adminUsername: data.adminUsername || 'admin',
         kitchenUsername: data.kitchenUsername || 'cozinha'
-      });
+      })
     }
-  };
+  }
 
   const handleSaveSettings = async () => {
-    setSaving(true);
-    const success = await settingsService.saveSettings(settings);
-    setSaving(false);
+    setSaving(true)
+    const success = await settingsService.saveSettings(settings)
+    setSaving(false)
     if (success) {
-      alert('✅ Configurações salvas com sucesso!');
+      alert('✅ Configurações salvas com sucesso!')
     } else {
-      alert('❌ Erro ao salvar configurações.');
+      alert('❌ Erro ao salvar configurações.')
     }
-  };
+  }
 
   const handleSavePasswords = async () => {
-    // Validações
     if (passwords.adminPassword && passwords.adminPassword !== passwords.adminPasswordConfirm) {
-      alert('❌ As senhas do Admin não coincidem!');
-      return;
+      alert('❌ As senhas do Admin não coincidem!')
+      return
     }
     
     if (passwords.kitchenPassword && passwords.kitchenPassword !== passwords.kitchenPasswordConfirm) {
-      alert('❌ As senhas da Cozinha não coincidem!');
-      return;
+      alert('❌ As senhas da Cozinha não coincidem!')
+      return
     }
 
     if (!passwords.adminUsername.trim() || !passwords.kitchenUsername.trim()) {
-      alert('❌ Os nomes de usuário não podem estar vazios!');
-      return;
+      alert('❌ Os nomes de usuário não podem estar vazios!')
+      return
     }
 
-    setSaving(true);
+    setSaving(true)
     const passwordData = {
       adminUsername: passwords.adminUsername,
       adminPassword: passwords.adminPassword || undefined,
       kitchenUsername: passwords.kitchenUsername,
       kitchenPassword: passwords.kitchenPassword || undefined
-    };
+    }
 
-    const success = await settingsService.savePasswords(passwordData);
-    setSaving(false);
+    const success = await settingsService.savePasswords(passwordData)
+    setSaving(false)
 
     if (success) {
-      alert('✅ Credenciais atualizadas com sucesso!\n\n⚠️ Importante: Anote as novas credenciais!');
+      alert('✅ Credenciais atualizadas com sucesso!\n\n⚠️ Importante: Anote as novas credenciais!')
       setPasswords({
         ...passwords,
         adminPassword: '',
         adminPasswordConfirm: '',
         kitchenPassword: '',
         kitchenPasswordConfirm: ''
-      });
-      setShowPasswordSection(false);
+      })
+      setShowPasswordSection(false)
     } else {
-      alert('❌ Erro ao salvar credenciais.');
+      alert('❌ Erro ao salvar credenciais.')
     }
-  };
+  }
 
   const handleSaveMenuItem = async (item) => {
     if (!item.name.trim() || !item.description.trim()) {
-      alert('❌ Nome e descrição são obrigatórios!');
-      return;
+      alert('❌ Nome e descrição são obrigatórios!')
+      return
     }
 
     if (item.price <= 0) {
-      alert('❌ O preço deve ser maior que zero!');
-      return;
+      alert('❌ O preço deve ser maior que zero!')
+      return
     }
 
-    const success = await settingsService.saveMenuItem(item);
+    const success = await settingsService.saveMenuItem(item)
     if (success) {
-      loadMenu();
-      setEditingItem(null);
-      alert('✅ Item salvo com sucesso!');
+      loadMenu()
+      setEditingItem(null)
+      alert('✅ Item salvo com sucesso!')
     } else {
-      alert('❌ Erro ao salvar item.');
+      alert('❌ Erro ao salvar item.')
     }
-  };
+  }
 
   const handleDeleteMenuItem = async (firebaseKey) => {
     if (window.confirm('Tem certeza que deseja excluir este item?')) {
-      const success = await settingsService.deleteMenuItem(firebaseKey);
+      const success = await settingsService.deleteMenuItem(firebaseKey)
       if (success) {
-        loadMenu();
-        alert('✅ Item excluído com sucesso!');
+        loadMenu()
+        alert('✅ Item excluído com sucesso!')
       } else {
-        alert('❌ Erro ao excluir item.');
+        alert('❌ Erro ao excluir item.')
       }
     }
-  };
+  }
 
   const handleToggleAvailability = async (item) => {
     await handleSaveMenuItem({
       ...item,
       available: !item.available
-    });
-  };
+    })
+  }
 
-  if (!settings) return <div>Carregando...</div>;
+  if (!settings) return <div>Carregando...</div>
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
@@ -269,7 +267,7 @@ const SettingsPanel = ({ onClose }) => {
         {/* Tabs */}
         <div className="border-b bg-gray-50 px-6 overflow-x-auto">
           <div className="flex gap-2 min-w-max">
-            {            [
+            {[
               { id: 'general', label: 'Geral', icon: Settings },
               { id: 'menu', label: 'Cardápio', icon: UtensilsCrossed },
               { id: 'system', label: 'Sistema', icon: Bell },
@@ -747,14 +745,14 @@ const SettingsPanel = ({ onClose }) => {
                   <div className="flex gap-3">
                     <button
                       onClick={() => {
-                        setShowPasswordSection(false);
+                        setShowPasswordSection(false)
                         setPasswords({
                           ...passwords,
                           adminPassword: '',
                           adminPasswordConfirm: '',
                           kitchenPassword: '',
                           kitchenPasswordConfirm: ''
-                        });
+                        })
                       }}
                       className="flex-1 bg-gray-300 text-gray-700 px-6 py-3 rounded-lg hover:bg-gray-400 font-semibold"
                     >
@@ -866,7 +864,7 @@ const SettingsPanel = ({ onClose }) => {
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default SettingsPanel;
+export default SettingsPanel

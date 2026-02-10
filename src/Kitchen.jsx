@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { ChefHat, Package, Clock, LogOut } from 'lucide-react';
+import React, { useState } from 'react'
+import { ChefHat, Package, Clock, LogOut } from 'lucide-react'
 
 // Componente de Pedido para a Cozinha
 const OrderCard = ({ order, onStatusChange }) => {
@@ -7,13 +7,13 @@ const OrderCard = ({ order, onStatusChange }) => {
     pending: 'bg-yellow-100 border-yellow-300 text-yellow-800',
     preparing: 'bg-blue-100 border-blue-300 text-blue-800',
     ready: 'bg-green-100 border-green-300 text-green-800',
-  };
+  }
 
   const statusLabels = {
     pending: 'Pendente',
     preparing: 'Preparando',
     ready: 'Pronto',
-  };
+  }
 
   return (
     <div className={`border-2 rounded-lg p-4 ${statusColors[order.status]} transition-all`}>
@@ -71,17 +71,17 @@ const OrderCard = ({ order, onStatusChange }) => {
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
 // Tela da Cozinha
 const Kitchen = ({ orders, onStatusChange, onLogout }) => {
-  const [filter, setFilter] = useState('active'); // 'active' ou 'ready'
+  const [filter, setFilter] = useState('active') // 'active' ou 'ready'
 
-  const activeOrders = orders.filter(o => o.status === 'pending' || o.status === 'preparing');
-  const readyOrders = orders.filter(o => o.status === 'ready');
+  const activeOrders = orders.filter(o => o.status === 'pending' || o.status === 'preparing')
+  const readyOrders = orders.filter(o => o.status === 'ready')
   
-  const displayOrders = filter === 'active' ? activeOrders : readyOrders;
+  const displayOrders = filter === 'active' ? activeOrders : readyOrders
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-50">
@@ -157,7 +157,7 @@ const Kitchen = ({ orders, onStatusChange, onLogout }) => {
         </div>
       </main>
     </div>
-  );
-};
+  )
+}
 
-export default Kitchen;
+export default Kitchen

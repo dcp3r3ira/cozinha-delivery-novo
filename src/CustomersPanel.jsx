@@ -1,44 +1,44 @@
-import React, { useState, useEffect } from 'react';
-import { Users, Phone, MapPin, Package, DollarSign, Search, Award } from 'lucide-react';
-import customerService from './customerService';
+import React, { useState, useEffect } from 'react'
+import { Users, Phone, MapPin, Package, DollarSign, Search, Award } from 'lucide-react'
+import customerService from './customerService'
 
 const CustomersPanel = () => {
-  const [customers, setCustomers] = useState([]);
-  const [selectedCustomer, setSelectedCustomer] = useState(null);
-  const [orderHistory, setOrderHistory] = useState([]);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [loading, setLoading] = useState(true);
+  const [customers, setCustomers] = useState([])
+  const [selectedCustomer, setSelectedCustomer] = useState(null)
+  const [orderHistory, setOrderHistory] = useState([])
+  const [searchTerm, setSearchTerm] = useState('')
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    loadCustomers();
-  }, []);
+    loadCustomers()
+  }, [])
 
   const loadCustomers = async () => {
-    setLoading(true);
+    setLoading(true)
     try {
-      const data = await customerService.getAllCustomers();
-      setCustomers(data);
+      const data = await customerService.getAllCustomers()
+      setCustomers(data)
     } catch (error) {
-      console.error('Erro ao carregar clientes:', error);
+      console.error('Erro ao carregar clientes:', error)
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
-  };
+  }
 
   const handleSelectCustomer = async (customer) => {
-    setSelectedCustomer(customer);
-    const history = await customerService.getCustomerOrderHistory(customer.phone);
-    setOrderHistory(history);
-  };
+    setSelectedCustomer(customer)
+    const history = await customerService.getCustomerOrderHistory(customer.phone)
+    setOrderHistory(history)
+  }
 
   const filteredCustomers = customers.filter(customer =>
     customer.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
     customer.phone.includes(searchTerm)
-  );
+  )
 
-  const totalCustomers = customers.length;
-  const totalRevenue = customers.reduce((sum, c) => sum + (c.totalSpent || 0), 0);
-  const totalOrders = customers.reduce((sum, c) => sum + (c.totalOrders || 0), 0);
+  const totalCustomers = customers.length
+  const totalRevenue = customers.reduce((sum, c) => sum + (c.totalSpent || 0), 0)
+  const totalOrders = customers.reduce((sum, c) => sum + (c.totalOrders || 0), 0)
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 to-pink-50 p-6">
@@ -253,7 +253,7 @@ const CustomersPanel = () => {
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default CustomersPanel;
+export default CustomersPanel

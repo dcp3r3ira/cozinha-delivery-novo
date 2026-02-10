@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react';
-import { ShoppingCart, Plus, Minus, Trash2, MapPin, CreditCard, DollarSign, Check, X, User, Phone } from 'lucide-react';
-import customerService from './customerService';
-import settingsService from './settingsService';
+import React, { useState, useEffect } from 'react'
+import { ShoppingCart, Plus, Minus, Trash2, MapPin, CreditCard, DollarSign, Check, X, User, Phone } from 'lucide-react'
+import customerService from './customerService'
+import settingsService from './settingsService'
 
-const DELIVERY_FEE = 8.00;
+const DELIVERY_FEE = 8.00
 
 // Componente do Item do Menu
 const MenuItem = ({ item, onAdd }) => {
@@ -31,85 +31,85 @@ const MenuItem = ({ item, onAdd }) => {
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
 // Componente do Carrinho
 const Cart = ({ cart, onUpdateQuantity, onRemove, onCheckout }) => {
-  const [isOpen, setIsOpen] = useState(false);
-  const [showCheckout, setShowCheckout] = useState(false);
+  const [isOpen, setIsOpen] = useState(false)
+  const [showCheckout, setShowCheckout] = useState(false)
   
   // Dados do cliente
-  const [phone, setPhone] = useState('');
-  const [name, setName] = useState('');
-  const [address, setAddress] = useState('');
-  const [paymentMethod, setPaymentMethod] = useState('');
-  const [loading, setLoading] = useState(false);
-  const [customerFound, setCustomerFound] = useState(false);
+  const [phone, setPhone] = useState('')
+  const [name, setName] = useState('')
+  const [address, setAddress] = useState('')
+  const [paymentMethod, setPaymentMethod] = useState('')
+  const [loading, setLoading] = useState(false)
+  const [customerFound, setCustomerFound] = useState(false)
 
-  const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-  const total = subtotal + DELIVERY_FEE;
-  const itemCount = cart.reduce((sum, item) => sum + item.quantity, 0);
+  const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0)
+  const total = subtotal + DELIVERY_FEE
+  const itemCount = cart.reduce((sum, item) => sum + item.quantity, 0)
 
   const formatPhone = (value) => {
-    const numbers = value.replace(/\D/g, '');
+    const numbers = value.replace(/\D/g, '')
     if (numbers.length <= 11) {
-      return numbers.replace(/(\d{2})(\d{5})(\d{4})/, '($1) $2-$3');
+      return numbers.replace(/(\d{2})(\d{5})(\d{4})/, '($1) $2-$3')
     }
-    return value;
-  };
+    return value
+  }
 
   const handlePhoneChange = (e) => {
-    const formatted = formatPhone(e.target.value);
-    setPhone(formatted);
-    setCustomerFound(false);
-  };
+    const formatted = formatPhone(e.target.value)
+    setPhone(formatted)
+    setCustomerFound(false)
+  }
 
   const handlePhoneBlur = async () => {
     if (phone.replace(/\D/g, '').length >= 10) {
-      setLoading(true);
+      setLoading(true)
       try {
-        const customer = await customerService.getCustomerByPhone(phone);
+        const customer = await customerService.getCustomerByPhone(phone)
         if (customer) {
-          setName(customer.name);
-          setAddress(customer.address);
-          setCustomerFound(true);
+          setName(customer.name)
+          setAddress(customer.address)
+          setCustomerFound(true)
         }
       } catch (error) {
-        console.error('Erro ao buscar cliente:', error);
+        console.error('Erro ao buscar cliente:', error)
       } finally {
-        setLoading(false);
+        setLoading(false)
       }
     }
-  };
+  }
 
   const handleFinishOrder = () => {
     if (cart.length === 0) {
-      alert('Adicione itens ao carrinho!');
-      return;
+      alert('Adicione itens ao carrinho!')
+      return
     }
-    setShowCheckout(true);
-  };
+    setShowCheckout(true)
+  }
 
   const handleConfirmOrder = async () => {
     if (!name.trim()) {
-      alert('Por favor, insira seu nome!');
-      return;
+      alert('Por favor, insira seu nome!')
+      return
     }
     if (phone.replace(/\D/g, '').length < 10) {
-      alert('Por favor, insira um telefone válido!');
-      return;
+      alert('Por favor, insira um telefone válido!')
+      return
     }
     if (!address.trim()) {
-      alert('Por favor, insira o endereço de entrega!');
-      return;
+      alert('Por favor, insira o endereço de entrega!')
+      return
     }
     if (!paymentMethod) {
-      alert('Por favor, selecione a forma de pagamento!');
-      return;
+      alert('Por favor, selecione a forma de pagamento!')
+      return
     }
 
-    setLoading(true);
+    setLoading(true)
     
     try {
       // Registrar ou atualizar cliente
@@ -117,7 +117,7 @@ const Cart = ({ cart, onUpdateQuantity, onRemove, onCheckout }) => {
         name,
         phone,
         address
-      });
+      })
 
       const order = {
         items: cart,
@@ -129,29 +129,29 @@ const Cart = ({ cart, onUpdateQuantity, onRemove, onCheckout }) => {
         timestamp: new Date().toISOString(),
         customerName: name,
         customerPhone: phone
-      };
+      }
 
       // Atualizar estatísticas do cliente
-      await customerService.updateCustomerStats(phone, total);
+      await customerService.updateCustomerStats(phone, total)
 
-      onCheckout(order);
+      onCheckout(order)
       
       // Limpar formulário
-      setShowCheckout(false);
-      setIsOpen(false);
-      setPhone('');
-      setName('');
-      setAddress('');
-      setPaymentMethod('');
-      setCustomerFound(false);
+      setShowCheckout(false)
+      setIsOpen(false)
+      setPhone('')
+      setName('')
+      setAddress('')
+      setPaymentMethod('')
+      setCustomerFound(false)
       
     } catch (error) {
-      console.error('Erro ao finalizar pedido:', error);
-      alert('Erro ao finalizar pedido. Tente novamente.');
+      console.error('Erro ao finalizar pedido:', error)
+      alert('Erro ao finalizar pedido. Tente novamente.')
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
-  };
+  }
 
   return (
     <>
@@ -376,108 +376,108 @@ const Cart = ({ cart, onUpdateQuantity, onRemove, onCheckout }) => {
         </div>
       )}
     </>
-  );
-};
+  )
+}
 
 // Componente Principal do Menu
 const Menu = ({ onNewOrder, onAccessInternal }) => {
-  const [cart, setCart] = useState([]);
-  const [selectedCategory, setSelectedCategory] = useState('Todas');
-  const [menuItems, setMenuItems] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [cart, setCart] = useState([])
+  const [selectedCategory, setSelectedCategory] = useState('Todas')
+  const [menuItems, setMenuItems] = useState([])
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    loadMenu();
+    loadMenu()
     
     // Escutar mudanças em tempo real
     const unsubscribe = settingsService.onMenuChange((items) => {
-      setMenuItems(items.filter(item => item.available !== false));
-    });
+      setMenuItems(items.filter(item => item.available !== false))
+    })
 
     return () => {
-      if (unsubscribe) unsubscribe();
-    };
-  }, []);
+      if (unsubscribe) unsubscribe()
+    }
+  }, [])
 
   const loadMenu = async () => {
-    setLoading(true);
+    setLoading(true)
     try {
-      const items = await settingsService.getMenu();
+      const items = await settingsService.getMenu()
       // Filtrar apenas itens disponíveis
-      setMenuItems(items.filter(item => item.available !== false));
+      setMenuItems(items.filter(item => item.available !== false))
     } catch (error) {
-      console.error('Erro ao carregar menu:', error);
+      console.error('Erro ao carregar menu:', error)
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
-  };
+  }
 
-  const categories = ['Todas', ...new Set(menuItems.map(item => item.category))];
+  const categories = ['Todas', ...new Set(menuItems.map(item => item.category))]
 
   const filteredItems = selectedCategory === 'Todas'
     ? menuItems
-    : menuItems.filter(item => item.category === selectedCategory);
+    : menuItems.filter(item => item.category === selectedCategory)
 
   const handleAddToCart = (item) => {
-    const existingItem = cart.find(cartItem => cartItem.id === item.id);
+    const existingItem = cart.find(cartItem => cartItem.id === item.id)
     if (existingItem) {
       setCart(cart.map(cartItem =>
         cartItem.id === item.id
           ? { ...cartItem, quantity: cartItem.quantity + 1 }
           : cartItem
-      ));
+      ))
     } else {
-      setCart([...cart, { ...item, quantity: 1 }]);
+      setCart([...cart, { ...item, quantity: 1 }])
     }
-  };
+  }
 
   const handleUpdateQuantity = (itemId, newQuantity) => {
     if (newQuantity === 0) {
-      handleRemoveFromCart(itemId);
+      handleRemoveFromCart(itemId)
     } else {
       setCart(cart.map(item =>
         item.id === itemId ? { ...item, quantity: newQuantity } : item
-      ));
+      ))
     }
-  };
+  }
 
   const handleRemoveFromCart = (itemId) => {
-    setCart(cart.filter(item => item.id !== itemId));
-  };
+    setCart(cart.filter(item => item.id !== itemId))
+  }
 
   const handleCheckout = async (order) => {
     // Som de campainha
-    const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+    const audioContext = new (window.AudioContext || window.webkitAudioContext)()
     
     const playBell = (frequency, startTime, duration) => {
-      const oscillator = audioContext.createOscillator();
-      const gainNode = audioContext.createGain();
+      const oscillator = audioContext.createOscillator()
+      const gainNode = audioContext.createGain()
       
-      oscillator.connect(gainNode);
-      gainNode.connect(audioContext.destination);
+      oscillator.connect(gainNode)
+      gainNode.connect(audioContext.destination)
       
-      oscillator.frequency.value = frequency;
-      oscillator.type = 'sine';
+      oscillator.frequency.value = frequency
+      oscillator.type = 'sine'
       
-      gainNode.gain.setValueAtTime(0.3, startTime);
-      gainNode.gain.exponentialRampToValueAtTime(0.01, startTime + duration);
+      gainNode.gain.setValueAtTime(0.3, startTime)
+      gainNode.gain.exponentialRampToValueAtTime(0.01, startTime + duration)
       
-      oscillator.start(startTime);
-      oscillator.stop(startTime + duration);
-    };
+      oscillator.start(startTime)
+      oscillator.stop(startTime + duration)
+    }
     
-    const now = audioContext.currentTime;
-    playBell(800, now, 0.3);
-    playBell(600, now + 0.35, 0.4);
+    const now = audioContext.currentTime
+    playBell(800, now, 0.3)
+    playBell(600, now + 0.35, 0.4)
 
     // Enviar pedido para a cozinha
-    onNewOrder(order);
+    onNewOrder(order)
 
     // Limpar carrinho
-    setCart([]);
+    setCart([])
     
-    alert('🎉 Pedido enviado com sucesso!\n\nVocê receberá uma confirmação em breve.');
-  };
+    alert('🎉 Pedido enviado com sucesso!\n\nVocê receberá uma confirmação em breve.')
+  }
 
   if (loading) {
     return (
@@ -487,7 +487,7 @@ const Menu = ({ onNewOrder, onAccessInternal }) => {
           <p className="text-gray-600">Carregando cardápio...</p>
         </div>
       </div>
-    );
+    )
   }
 
   if (menuItems.length === 0) {
@@ -524,7 +524,7 @@ const Menu = ({ onNewOrder, onAccessInternal }) => {
           </div>
         </div>
       </div>
-    );
+    )
   }
 
   return (
@@ -582,7 +582,7 @@ const Menu = ({ onNewOrder, onAccessInternal }) => {
         onCheckout={handleCheckout}
       />
     </div>
-  );
-};
+  )
+}
 
-export default Menu;
+export default Menu
