@@ -1,16 +1,7 @@
-import React, { useState } from 'react';
-import {
-  ChefHat,
-  Package,
-  Clock,
-  CheckCircle,
-  BarChart3,
-  Settings,
-  LogOut,
-  Trash2
-} from 'lucide-react';
-import CustomersPanel from './CustomersPanel';
-import SettingsPanel from './SettingsPanel';
+import React, { useState } from 'react'
+import { ChefHat, Package, Clock, LogOut, Trash2, BarChart3, Settings } from 'lucide-react'
+import CustomersPanel from './CustomersPanel'
+import SettingsPanel from './SettingsPanel'
 
 // Card de Pedido
 const OrderCard = ({ order, onStatusChange, onCancel }) => {
@@ -19,14 +10,14 @@ const OrderCard = ({ order, onStatusChange, onCancel }) => {
     preparing: 'bg-blue-100 border-blue-300 text-blue-800',
     ready: 'bg-green-100 border-green-300 text-green-800',
     completed: 'bg-gray-100 border-gray-300 text-gray-800'
-  };
+  }
 
   const statusLabels = {
     pending: 'Pendente',
     preparing: 'Preparando',
     ready: 'Pronto',
     completed: 'Concluído'
-  };
+  }
 
   return (
     <div className={`border-2 rounded-lg p-4 ${statusColors[order.status]}`}>
@@ -100,8 +91,8 @@ const OrderCard = ({ order, onStatusChange, onCancel }) => {
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
 // Dashboard
 const StatsDashboard = ({ stats }) => (
@@ -109,7 +100,7 @@ const StatsDashboard = ({ stats }) => (
     {[
       { label: 'Pendentes', value: stats.pending, icon: Clock },
       { label: 'Preparando', value: stats.preparing, icon: ChefHat },
-      { label: 'Prontos', value: stats.ready, icon: CheckCircle },
+      { label: 'Prontos', value: stats.ready, icon: Package },
       { label: 'Concluídos', value: stats.completed, icon: Package }
     ].map((s, i) => (
       <div key={i} className="bg-white rounded shadow p-4">
@@ -123,18 +114,18 @@ const StatsDashboard = ({ stats }) => (
       </div>
     ))}
   </div>
-);
+)
 
 const AdminPanel = ({ orders, onStatusChange, onCancel, onLogout }) => {
-  const [view, setView] = useState('orders');
-  const [showSettings, setShowSettings] = useState(false);
+  const [view, setView] = useState('orders')
+  const [showSettings, setShowSettings] = useState(false)
 
   const stats = {
     pending: orders.filter(o => o.status === 'pending').length,
     preparing: orders.filter(o => o.status === 'preparing').length,
     ready: orders.filter(o => o.status === 'ready').length,
     completed: orders.filter(o => o.status === 'completed').length
-  };
+  }
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -176,7 +167,7 @@ const AdminPanel = ({ orders, onStatusChange, onCancel, onLogout }) => {
         {view === 'customers' && <CustomersPanel />}
       </main>
     </div>
-  );
-};
+  )
+}
 
-export default AdminPanel;
+export default AdminPanel

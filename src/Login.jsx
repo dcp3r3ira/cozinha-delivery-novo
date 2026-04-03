@@ -1,30 +1,30 @@
-import React, { useState, useEffect } from 'react';
-import { ChefHat, Lock, User } from 'lucide-react';
-import settingsService from './settingsService';
+import React, { useState, useEffect } from 'react'
+import { ChefHat, Lock, User } from 'lucide-react'
+import settingsService from './settingsService'
 
 const Login = ({ onLogin }) => {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
-  const [role, setRole] = useState('admin'); // 'admin' ou 'kitchen'
-  const [credentials, setCredentials] = useState(null);
+  const [username, setUsername] = useState('')
+  const [password, setPassword] = useState('')
+  const [error, setError] = useState('')
+  const [role, setRole] = useState('admin') // 'admin' ou 'kitchen'
+  const [credentials, setCredentials] = useState(null)
 
   useEffect(() => {
-    loadCredentials();
-  }, []);
+    loadCredentials()
+  }, [])
 
   const loadCredentials = async () => {
-    const data = await settingsService.getPasswords();
-    setCredentials(data);
-  };
+    const data = await settingsService.getPasswords()
+    setCredentials(data)
+  }
 
   const handleSubmit = (e) => {
-    e.preventDefault();
-    setError('');
+    e.preventDefault()
+    setError('')
 
     if (!credentials) {
-      setError('Erro ao carregar credenciais. Tente novamente.');
-      return;
+      setError('Erro ao carregar credenciais. Tente novamente.')
+      return
     }
 
     const validCredentials = {
@@ -36,22 +36,22 @@ const Login = ({ onLogin }) => {
         username: credentials.kitchenUsername, 
         password: credentials.kitchenPassword 
       }
-    };
+    }
 
     if (username === validCredentials[role].username && password === validCredentials[role].password) {
-      onLogin(role);
+      onLogin(role)
     } else {
-      setError('Usuário ou senha incorretos!');
-      setPassword('');
+      setError('Usuário ou senha incorretos!')
+      setPassword('')
     }
-  };
+  }
 
   if (!credentials) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-orange-50 to-red-50 flex items-center justify-center">
         <p>Carregando...</p>
       </div>
-    );
+    )
   }
 
   return (
@@ -169,7 +169,7 @@ const Login = ({ onLogin }) => {
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default Login;
+export default Login

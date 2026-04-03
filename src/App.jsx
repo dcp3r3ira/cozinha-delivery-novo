@@ -1,18 +1,18 @@
-import React, { useState, useEffect } from 'react';
-import Menu from './Menu';
-import Login from './Login';
-import AdminPanel from './AdminPanel';
-import Kitchen from './Kitchen';
-import orderService from './orderService';
+import React, { useState, useEffect } from 'react'
+import Menu from './Menu'
+import Login from './Login'
+import AdminPanel from './AdminPanel'
+import Kitchen from './Kitchen'
+import orderService from './orderService'
 
 // Componente de Alerta de Novo Pedido
 const NewOrderAlert = ({ order, onClose }) => {
   useEffect(() => {
     const timer = setTimeout(() => {
-      onClose();
-    }, 5000);
-    return () => clearTimeout(timer);
-  }, [onClose]);
+      onClose()
+    }, 5000)
+    return () => clearTimeout(timer)
+  }, [onClose])
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-70 z-50 flex items-center justify-center p-4">
@@ -36,106 +36,106 @@ const NewOrderAlert = ({ order, onClose }) => {
         </button>
       </div>
     </div>
-  );
-};
+  )
+}
 
 // Componente Principal
 const App = () => {
-  const [orders, setOrders] = useState([]);
-  const [currentUser, setCurrentUser] = useState(null);
-  const [newOrderAlert, setNewOrderAlert] = useState(null);
-  const [isFirebaseConnected, setIsFirebaseConnected] = useState(false);
-  const [previousOrdersCount, setPreviousOrdersCount] = useState(0);
+  const [orders, setOrders] = useState([])
+  const [currentUser, setCurrentUser] = useState(null)
+  const [newOrderAlert, setNewOrderAlert] = useState(null)
+  const [isFirebaseConnected, setIsFirebaseConnected] = useState(false)
+  const [previousOrdersCount, setPreviousOrdersCount] = useState(0)
 
   // Inicializar Firebase e escutar mudanças em tempo real
   useEffect(() => {
-    let unsubscribe;
+    let unsubscribe
 
     const initializeOrders = async () => {
       try {
         // Carregar pedidos iniciais
-        const initialOrders = await orderService.getOrders();
-        setOrders(initialOrders);
-        setPreviousOrdersCount(initialOrders.length);
-        setIsFirebaseConnected(true);
+        const initialOrders = await orderService.getOrders()
+        setOrders(initialOrders)
+        setPreviousOrdersCount(initialOrders.length)
+        setIsFirebaseConnected(true)
 
         // Escutar mudanças em tempo real
         orderService.onOrdersChange((updatedOrders) => {
-          setOrders(updatedOrders);
+          setOrders(updatedOrders)
           
           // Detectar novos pedidos
           if (updatedOrders.length > previousOrdersCount) {
-            const latestOrder = updatedOrders[0];
+            const latestOrder = updatedOrders[0]
             
             // Verificar se é realmente um novo pedido (status pending)
             if (latestOrder.status === 'pending' && (currentUser === 'kitchen' || currentUser === 'admin')) {
-              setNewOrderAlert(latestOrder);
-              playNotificationSound();
+              setNewOrderAlert(latestOrder)
+              playNotificationSound()
             }
           }
           
-          setPreviousOrdersCount(updatedOrders.length);
-        });
+          setPreviousOrdersCount(updatedOrders.length)
+        })
 
       } catch (error) {
-        console.error('Erro ao conectar com Firebase:', error);
-        setIsFirebaseConnected(false);
+        console.error('Erro ao conectar com Firebase:', error)
+        setIsFirebaseConnected(false)
         
         // Fallback para dados locais se Firebase falhar
         const defaultOrders = [
           { id: 1, customer: 'João Silva', items: ['Pizza Margherita', 'Refrigerante'], status: 'pending', time: '10:30', total: 45.00, address: 'Rua das Flores, 123', paymentMethod: 'pix', firebaseKey: 'default1' },
           { id: 2, customer: 'Maria Santos', items: ['Hambúrguer Artesanal', 'Batata Frita'], status: 'preparing', time: '10:35', total: 38.50, address: 'Av. Principal, 456', paymentMethod: 'dinheiro', firebaseKey: 'default2' },
           { id: 3, customer: 'Pedro Costa', items: ['Salada Caesar', 'Suco Natural'], status: 'ready', time: '10:20', total: 32.00, address: 'Rua do Comércio, 789', paymentMethod: 'pix', firebaseKey: 'default3' },
-        ];
-        setOrders(defaultOrders);
+        ]
+        setOrders(defaultOrders)
       }
-    };
+    }
 
-    initializeOrders();
+    initializeOrders()
 
     return () => {
       if (unsubscribe) {
-        unsubscribe();
+        unsubscribe()
       }
-    };
-  }, [currentUser, previousOrdersCount]);
+    }
+  }, [currentUser, previousOrdersCount])
 
   const playNotificationSound = () => {
     try {
-      const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+      const audioContext = new (window.AudioContext || window.webkitAudioContext)()
       
       const playBell = (frequency, startTime, duration) => {
-        const oscillator = audioContext.createOscillator();
-        const gainNode = audioContext.createGain();
+        const oscillator = audioContext.createOscillator()
+        const gainNode = audioContext.createGain()
         
-        oscillator.connect(gainNode);
-        gainNode.connect(audioContext.destination);
+        oscillator.connect(gainNode)
+        gainNode.connect(audioContext.destination)
         
-        oscillator.frequency.value = frequency;
-        oscillator.type = 'sine';
+        oscillator.frequency.value = frequency
+        oscillator.type = 'sine'
         
-        gainNode.gain.setValueAtTime(0.4, startTime);
-        gainNode.gain.exponentialRampToValueAtTime(0.01, startTime + duration);
+        gainNode.gain.setValueAtTime(0.4, startTime)
+        gainNode.gain.exponentialRampToValueAtTime(0.01, startTime + duration)
         
-        oscillator.start(startTime);
-        oscillator.stop(startTime + duration);
-      };
+        oscillator.start(startTime)
+        oscillator.stop(startTime + duration)
+      }
       
-      const now = audioContext.currentTime;
-      playBell(800, now, 0.3);
-      playBell(600, now + 0.35, 0.4);
+      const now = audioContext.currentTime
+      playBell(800, now, 0.3)
+      playBell(600, now + 0.35, 0.4)
     } catch (error) {
-      console.error('Erro ao reproduzir som:', error);
+      console.error('Erro ao reproduzir som:', error)
     }
-  };
+  }
 
   const handleLogin = (role) => {
-    setCurrentUser(role);
-  };
+    setCurrentUser(role)
+  }
 
   const handleLogout = () => {
-    setCurrentUser(null);
-  };
+    setCurrentUser(null)
+  }
 
   const handleNewOrder = async (orderData) => {
     try {
@@ -148,36 +148,36 @@ const App = () => {
         total: orderData.total,
         address: orderData.address,
         paymentMethod: orderData.paymentMethod
-      };
+      }
 
-      await orderService.addOrder(newOrder);
-      playNotificationSound();
+      await orderService.addOrder(newOrder)
+      playNotificationSound()
       
     } catch (error) {
-      console.error('Erro ao criar pedido:', error);
-      alert('Erro ao enviar pedido. Tente novamente.');
+      console.error('Erro ao criar pedido:', error)
+      alert('Erro ao enviar pedido. Tente novamente.')
     }
-  };
+  }
 
   const handleStatusChange = async (firebaseKey, orderId, newStatus) => {
     try {
-      await orderService.updateOrderStatus(firebaseKey, orderId, newStatus);
+      await orderService.updateOrderStatus(firebaseKey, orderId, newStatus)
     } catch (error) {
-      console.error('Erro ao atualizar status:', error);
-      alert('Erro ao atualizar pedido. Tente novamente.');
+      console.error('Erro ao atualizar status:', error)
+      alert('Erro ao atualizar pedido. Tente novamente.')
     }
-  };
+  }
 
   const handleCancel = async (firebaseKey) => {
     if (window.confirm('Tem certeza que deseja cancelar/excluir este pedido?')) {
       try {
-        await orderService.deleteOrder(firebaseKey);
+        await orderService.deleteOrder(firebaseKey)
       } catch (error) {
-        console.error('Erro ao cancelar pedido:', error);
-        alert('Erro ao cancelar pedido. Tente novamente.');
+        console.error('Erro ao cancelar pedido:', error)
+        alert('Erro ao cancelar pedido. Tente novamente.')
       }
     }
-  };
+  }
 
   // Indicador de conexão Firebase (apenas em desenvolvimento)
   const FirebaseStatus = () => (
@@ -186,7 +186,7 @@ const App = () => {
     }`}>
       {isFirebaseConnected ? '🔥 Firebase Conectado' : '⚠️ Firebase Desconectado'}
     </div>
-  );
+  )
 
   // Menu Público
   if (!currentUser) {
@@ -195,12 +195,12 @@ const App = () => {
         <Menu onNewOrder={handleNewOrder} onAccessInternal={() => setCurrentUser('login')} />
         <FirebaseStatus />
       </>
-    );
+    )
   }
 
   // Tela de Login
   if (currentUser === 'login') {
-    return <Login onLogin={handleLogin} />;
+    return <Login onLogin={handleLogin} />
   }
 
   // Painel Admin
@@ -221,7 +221,7 @@ const App = () => {
         />
         <FirebaseStatus />
       </>
-    );
+    )
   }
 
   // Tela da Cozinha
@@ -241,10 +241,10 @@ const App = () => {
         />
         <FirebaseStatus />
       </>
-    );
+    )
   }
 
-  return null;
-};
+  return null
+}
 
-export default App;
+export default App

@@ -1,69 +1,69 @@
-import React, { useState } from 'react';
-import { User, Phone, MapPin, ArrowRight } from 'lucide-react';
-import customerService from './customerService';
+import React, { useState } from 'react'
+import { User, Phone, MapPin, ArrowRight } from 'lucide-react'
+import customerService from './customerService'
 
 const CustomerLogin = ({ onLoginSuccess }) => {
-  const [step, setStep] = useState(1); // 1: login, 2: cadastro
-  const [phone, setPhone] = useState('');
-  const [name, setName] = useState('');
-  const [address, setAddress] = useState('');
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
+  const [step, setStep] = useState(1) // 1: login, 2: cadastro
+  const [phone, setPhone] = useState('')
+  const [name, setName] = useState('')
+  const [address, setAddress] = useState('')
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState('')
 
   const formatPhone = (value) => {
-    const numbers = value.replace(/\D/g, '');
+    const numbers = value.replace(/\D/g, '')
     if (numbers.length <= 11) {
-      return numbers.replace(/(\d{2})(\d{5})(\d{4})/, '($1) $2-$3');
+      return numbers.replace(/(\d{2})(\d{5})(\d{4})/, '($1) $2-$3')
     }
-    return value;
-  };
+    return value
+  }
 
   const handlePhoneChange = (e) => {
-    const formatted = formatPhone(e.target.value);
-    setPhone(formatted);
-  };
+    const formatted = formatPhone(e.target.value)
+    setPhone(formatted)
+  }
 
   const handleCheckPhone = async (e) => {
-    e.preventDefault();
-    setLoading(true);
-    setError('');
+    e.preventDefault()
+    setLoading(true)
+    setError('')
 
     try {
-      const customer = await customerService.getCustomerByPhone(phone);
+      const customer = await customerService.getCustomerByPhone(phone)
       
       if (customer) {
         // Cliente encontrado, fazer login
-        onLoginSuccess(customer);
+        onLoginSuccess(customer)
       } else {
         // Cliente novo, ir para cadastro
-        setStep(2);
+        setStep(2)
       }
     } catch (err) {
-      setError('Erro ao verificar telefone. Tente novamente.');
+      setError('Erro ao verificar telefone. Tente novamente.')
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
-  };
+  }
 
   const handleRegister = async (e) => {
-    e.preventDefault();
-    setLoading(true);
-    setError('');
+    e.preventDefault()
+    setLoading(true)
+    setError('')
 
     try {
       const customer = await customerService.registerCustomer({
         name,
         phone,
         address
-      });
+      })
       
-      onLoginSuccess(customer);
+      onLoginSuccess(customer)
     } catch (err) {
-      setError('Erro ao cadastrar. Tente novamente.');
+      setError('Erro ao cadastrar. Tente novamente.')
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
-  };
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-orange-50 to-red-50 flex items-center justify-center p-4">
@@ -198,7 +198,7 @@ const CustomerLogin = ({ onLoginSuccess }) => {
         )}
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default CustomerLogin;
+export default CustomerLogin

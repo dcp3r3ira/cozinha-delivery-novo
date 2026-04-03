@@ -1,70 +1,205 @@
-# Getting Started with Create React App
+# Cozinha Delivery - Sistema de Entrega
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Um sistema completo de gerenciamento de delivery com painel administrativo, tela de cozinha e interface de clientes. Construído com React 19, Vite e Firebase Realtime Database.
 
-## Available Scripts
+## 🚀 Sobre o Projeto
 
-In the project directory, you can run:
+Este é um sistema web moderno para gerenciamento de pedidos de delivery, com:
 
-### `npm start`
+- **Menu Interativo**: Exibição dinâmica de produtos com categorias
+- **Carrinho de Compras**: Sistema de carrinho flutuante e checkout
+- **Painel de Admin**: Gestão completa de pedidos, menu e configurações
+- **Tela de Cozinha**: Visualização dedicada para preparação de pedidos
+- **Gestão de Clientes**: Histórico de compras e estatísticas
+- **Integração Firebase**: Sincronização em tempo real
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+## 💻 Tecnologias
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+- **React 19.2.3** - Framework UI
+- **Vite 5.1** - Build tool de nova geração
+- **Firebase 12.8** - Backend e realtime database
+- **Tailwind CSS 3.4** - Framework de CSS utilitário
+- **Lucide React** - Ícones SVG
+- **Node.js ES Modules** - Módulos JavaScript modernos
 
-### `npm test`
+## 📋 Pré-requisitos
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+- Node.js 18+ instalado
+- npm ou yarn
+- Conta Firebase com Realtime Database configurado
 
-### `npm run build`
+## ⚙️ Instalação
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+1. Clone ou extraia o projeto:
+```bash
+cd cozinha-delivery-novo
+```
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+2. Instale as dependências:
+```bash
+npm install
+```
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+3. Configure as variáveis de ambiente:
+```bash
+cp .env.example .env
+```
 
-### `npm run eject`
+4. Edite `.env` com suas credenciais Firebase:
+```env
+VITE_FIREBASE_API_KEY=sua_api_key
+VITE_FIREBASE_AUTH_DOMAIN=seu_auth_domain
+VITE_FIREBASE_DATABASE_URL=sua_database_url
+VITE_FIREBASE_PROJECT_ID=seu_project_id
+VITE_FIREBASE_STORAGE_BUCKET=seu_storage_bucket
+VITE_FIREBASE_MESSAGING_SENDER_ID=seu_messaging_sender_id
+VITE_FIREBASE_APP_ID=seu_app_id
+```
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+## 🎯 Scripts Disponíveis
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+- `npm run dev` - Inicia o servidor de desenvolvimento (porta 3000)
+- `npm run build` - Compila o projeto para produção
+- `npm run preview` - Visualiza o build de produção localmente
+- `npm run test` - Executa testes (Vitest)
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+## 🏗️ Estrutura do Projeto
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+```
+src/
+├── App.jsx                  # Componente principal
+├── Menu.jsx                 # Cardápio e carrinho
+├── Login.jsx                # Tela de autenticação
+├── Kitchen.jsx              # Painel da cozinha
+├── AdminPanel.jsx           # Painel administrativo
+├── CustomersPanel.jsx       # Gestão de clientes
+├── SettingsPanel.jsx        # Configurações do sistema
+├── CustomerLogin.jsx        # Login de clientes
+├── firebaseConfig.js        # Configuração Firebase
+├── orderService.js          # Gerenciamento de pedidos
+├── customerService.js       # Gerenciamento de clientes
+├── settingsService.js       # Configurações da aplicação
+├── main.jsx                 # Entry point
+├── index.css                # Estilos Tailwind
+└── App.css                  # Estilos adicionais
+```
 
-## Learn More
+## 🔐 Credenciais Padrão
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+Ao iniciar a aplicação:
+- **Admin**: `admin` / `admin123`
+- **Cozinha**: `cozinha` / `cozinha123`
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+Altere as credenciais no painel de configurações!
 
-### Code Splitting
+## 🎨 Funcionalidades
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+### Menu Público
+- Visualização de produtos por categoria
+- Carrinho de compras flutuante
+- Checkout com dados de entrega
+- Duas formas de pagamento (PIX e Dinheiro)
+- Som de notificação ao confirmar pedido
 
-### Analyzing the Bundle Size
+### Painel Admin
+- Dashboard com estatísticas de pedidos
+- Gerenciamento completo do cardápio
+- Gestão de clientes e histórico de compras
+- Configurações de sistema (horários, taxa, notificações)
+- Gerenciamento de credenciais
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+### Tela de Cozinha
+- Visualização otimizada para preparação
+- Filtros por status (Em Preparo / Prontos)
+- Atualizações em tempo real de pedidos
+- Som e notificações de novos pedidos
 
-### Making a Progressive Web App
+### Gestão de Clientes
+- Busca por nome ou telefone
+- Detalhes completos do cliente
+- Histórico de pedidos
+- Estatísticas (total gasto, ticket médio)
+- Badge de cliente VIP (10+ pedidos)
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+## 📦 Integração Firebase
 
-### Advanced Configuration
+### Estrutura de Dados
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+```
+database/
+├── orders/           # Pedidos em tempo real
+├── menu/             # Itens do cardápio
+├── customers/        # Dados dos clientes
+├── settings/         # Configurações do sistema
+└── passwords/        # Credenciais de acesso
+```
 
-### Deployment
+## 🚀 Deploy
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+### Build para Produção
+```bash
+npm run build
+```
 
-### `npm run build` fails to minify
+A pasta `dist/` contém os arquivos prontos para deploy.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+### Opções de Hosting
+- Vercel (recomendado para Vite)
+- Netlify
+- Firebase Hosting
+- GitHub Pages
+
+## 📱 Responsividade
+
+O projeto é totalmente responsivo para:
+- Desktop (1920px+)
+- Tablet (768px - 1024px)
+- Mobile (320px - 767px)
+
+## 🔔 Som de Notificação
+
+O sistema usa Web Audio API para reproduzir sons de notificação ao:
+- Novo pedido chegar (somente em modo Admin/Cozinha)
+- Confirmar pedido (modo Cliente)
+
+Volume e status podem ser configurados no painel de settings.
+
+## 📝 Migração de Create React App para Vite
+
+Este projeto foi migrado de Create React App para Vite:
+
+- ✅ Remoção de `react-scripts`
+- ✅ Conversão de `.js` para `.jsx` (componentes)
+- ✅ Atualização de imports para ES Modules
+- ✅ Configuração de Vite com plugin React
+- ✅ Mantido Tailwind CSS e PostCSS
+- ✅ Todas as funcionalidades preservadas
+
+## 🐛 Troubleshooting
+
+### Firebase não conecta
+- Verificar credenciais em `.env`
+- Confirmar Realtime Database está ativo
+- Validar regras de segurança do Firebase
+
+### Estilo não aparece
+- Executar `npm run build` para compilar
+- Limpar cache do navegador (Ctrl+Shift+Del)
+- Verificar console do navegador
+
+### Porta 3000 já está em uso
+- Mudar porta em `vite.config.js`
+- Ou encerrar processo: `lsof -i :3000` (Linux/Mac)
+
+## 📄 Licença
+
+Projeto desenvolvido para uso educacional e comercial.
+
+## 👨‍💻 Autor
+
+Desenvolvido com ❤️ para sistemas de delivery modernos.
+
+---
+
+**Versão**: 1.0.0 (Migrado para Vite)  
+**Última atualização**: Fevereiro 2026
